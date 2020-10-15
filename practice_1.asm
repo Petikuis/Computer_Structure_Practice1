@@ -4,7 +4,6 @@
 
 .text
 .globl main
-.include "apoyo.asm"
 	main:		la $a0 array
 			li $a1 20
 			li $a2 10
