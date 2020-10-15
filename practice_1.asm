@@ -4,8 +4,8 @@
 
 .text
 .globl main
-	main:
-			la $a0 array
+.include "apoyo.asm"
+	main:		la $a0 array
 			li $a1 20
 			li $a2 10
 			jal init
@@ -31,6 +31,14 @@
 			move $a0 $v1
 			li $v0 1
 			syscall
+			
+			li $a0 0
+			li $a1 0
+			jal cmp
+			
+			move $a0 $v0
+			li $v0 1
+			syscall 
 			
 			li $v0 10
 			syscall
