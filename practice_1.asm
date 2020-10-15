@@ -17,7 +17,7 @@
 			li $a1 20
 			li $a2 10
 			li $a3 0
-			subi $sp $sp 8
+			sub $sp $sp 8
 			li $t0 0
 			sw $t0 8($sp)
 			li $t0 3
