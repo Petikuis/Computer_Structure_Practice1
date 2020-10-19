@@ -28,9 +28,13 @@
 			blez $a1 sum_error		# if m <= 0 jump to sum_error
 			blez $a2 sum_error		# if n <= 0 jump to sum_error
 			bge $t0 $a1 sum_error		# if j >= m jump to sum_error
+			bltz $t0 sum_error		# if j < 0 jump to sum_error
 			bge $t2 $a1 sum_error		# if l >= m jump to sum_error
+			bltz $t2 sum_error		# if l < 0 jump to sum_error
 			bge $a3 $a2 sum_error		# if i >= n jump to sum_error
+			bltz $a3 sum_error		# if i < 0 jump to sum_error
 			bge $t1 $a2 sum_error		# if k >= n jump to sum_error
+			bltz $t1 sum_error		# if k < 0 jump to sum_error
 			blt $t0 $t2 sum_no_errors	# if j < l jumt to sum_no_errors
 			bgt $t0 $t2 sum_error		# if j > l jump to sum_error
 			bgt $a3 $t1 sum_error		# having reached this branch we know j == l, if i > k jump to sum_error
@@ -68,9 +72,13 @@
 			blez $a2 com_error		# if m <= 0 jump to com_error
 			blez $a3 com_error		# if n <= 0 jump to com_error
 			bge $t1 $a2 com_error		# if j >= m jump to com_error
+			bltz $t1 com_error		# if j < 0 jump to com_error
 			bge $t3 $a2 com_error		# if l >= m jump to com_error
+			bltz $t3 com_error		# if l < 0 jump to com_error
 			bge $t0 $a3 com_error		# if i >= n jump to com_error
+			bltz $t0 com_error		# if i < 0 jump to com_error
 			bge $t2 $a3 com_error		# if k >= n jump to com_error
+			bltz $t2 com_error		# if k < 0 jump to com_error
 			blt $t1 $t3 com_no_errors	# if j < l jump to com_no_errors
 			bgt $t1 $t3 com_error		# if j > l jump to com_error
 			bgt $t0 $t2 com_error		# having reached this branch we know j == l, if i > k jump to com_error		
@@ -121,9 +129,13 @@
 			blez $a2 ext_error		# if n <= 0 jump to ext_error
 			blez $t0 ext_error		# if p <= 0 jump to ext_error
 			bge $t2 $a1 ext_error		# if j >= m jump to ext_error
+			bltz $t2 ext_error		# if j < 0 jump to ext_error
 			bge $t4 $a1 ext_error		# if l >= m jump to ext_error
+			bltz $t4 ext_error		# if l < 0 jump to ext_error
 			bge $t1 $a2 ext_error		# if i >= n jump to ext_error
+			bltz $t1 ext_error		# if i < 0 jump to ext_error
 			bge $t3 $a2 ext_error		# if k >= n jump to ext_error
+			bltz $t3 ext_error		# if k < 0 jump to ext_error
 			blt $t2 $t4 ext_check_p		# if j < l jump to ext_check_p
 			bgt $t2 $t4 ext_error		# if j > l jump to ext_error
 			bgt $t1 $t3 ext_error		# having reached this branch we know j == l, if i > k jump to error
@@ -148,6 +160,6 @@
 			addi $a3 $a3 4			# increment vector_address by 4
 			b ext_loop			# jump to ext_loop
 	ext_success:	li $v0 0			# success, load 0 to result register $v0
-			b ext_end			# jump to end
+			b ext_end			# jump to ext_end
 	ext_error:	li $v0 -1			# failure, load -1 to result register $v0
 	ext_end:	jr $ra				# return to $ra
