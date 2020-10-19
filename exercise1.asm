@@ -71,7 +71,7 @@
 			bge $t3 $a2 com_error		# if l >= m jump to com_error
 			bge $t0 $a3 com_error		# if i >= n jump to com_error
 			bge $t2 $a3 com_error		# if k >= n jump to com_error
-			blt $t0 $t2 sum_no_errors	# if j < l jumt to com_no_errors
+			blt $t1 $t3 com_no_errors	# if j < l jumt to com_no_errors
 			bgt $t1 $t2 com_error		# if j > l jump to com_error
 			bgt $t0 $t1 com_error		# having reached this branch we know j == l, if i > k jump to com_error		
 	com_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*j + i)*4 + address
