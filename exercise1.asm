@@ -20,21 +20,20 @@
 	init_end:	jr $ra				# return to $ra
 	
 .globl sum
-	sum:						# $a0 address, $a1 m, $a2 n, $a3 i, ($t0) $sb + 8 j, ($t1) $sb + 4 k, ($t2) $sb l
+	sum:						# $a0 address, $a1 m, $a2 n, $a3 i, ($t0) $sp + 8 j, ($t1) $sp + 4 k, ($t2) $sp l
 			lw $t0 8($sp)			# get j from the stack
 			lw $t1 4($sp)			# get k from the stack
 			lw $t2 ($sp)			# get l from the stack
-			addi $sp $sp 8			# move the stack to the last relevant element
+			addi $sp $sp 12			# move the stack to the last relevant element
 			blez $a1 sum_error		# if m <= 0 jump to add_error
 			blez $a2 sum_error		# if n <= 0 jump to add_error
 			bge $t0 $a1 sum_error		# if j >= m jump to add_error
 			bge $t2 $a1 sum_error		# if l >= m jump to add_error
 			bge $a3 $a2 sum_error		# if i >= n jump to add_error
 			bge $t1 $a2 sum_error		# if k >= n jump to add_error
-			blt $t0 $t2 sum_no_errors	# if j < l jumt to add_no_error
 			bgt $t0 $t2 sum_error		# if j > l jump to add_error
 			bgt $a3 $t1 sum_error		# having reached this branch we know j == l, if i > k jump to error
-	sum_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*j + i)*4 + address
+			# to obtain the address from (i,j) the following formula is used: (n*j + i)*4 + address
 			mul $t3 $a2 $t0 		# n*j
 			add $t3 $t3 $a3			# previous + i
 			mul $t3 $t3 4			# previous * 4
@@ -58,8 +57,55 @@
 	sum_error:	li $v0 -1			# failure, load -1 to result register $v0
 	sum_end:	jr $ra				# return to $ra
 			
-			
-
+.globl compare
+	compare:					# $a0 address matrix A, $a1 adress matrix B, $a2 m, $a3 n, ($t0) $sp + 12 i, ($t1) $sp + 8 j, ($t2) $sp + 4 k, ($t3) $sp l
+			lw $t0 12($sp)			# get i from the stack
+			lw $t1 8($sp)			# get j from the stack
+			lw $t2 4($sp)			# get k from the stack
+			lw $t3 ($sp)			# get l from the stack
+			addi $sp $sp 16			# move the stack to the last relevant element
+			blez $a2 com_error		# if m <= 0 jump to com_error
+			blez $a3 com_error		# if n <= 0 jump to com_error
+			bge $t1 $a2 com_error		# if j >= m jump to com_error
+			bge $t3 $a2 com_error		# if l >= m jump to com_error
+			bge $t0 $a3 com_error		# if i >= n jump to com_error
+			bge $t2 $a3 com_error		# if k >= n jump to com_error
+			bgt $t1 $t2 com_error		# if j > l jump to com_error
+			bgt $t0 $t1 com_error		# having reached this branch we know j == l, if i > k jump to error		
+			# to obtain the address from (i,j) the following formula is used: (n*j + i)*4 + address
+			mul $t4 $a3 $t1 		# n*j
+			add $t4 $t4 $t0			# previous + i
+			mul $t4 $t4 4			# previous * 4
+			# to obtain the address from (k,l) the following formula is used: (n*l + k)*4 + address
+			mul $t5 $a3 $t3 		# n*l
+			add $t5 $t6 $t2			# previous + k
+			mul $t5 $t6 4			# previous * 4
+			move $t6 $zero			# $t5 is sum
+			move $t7 $a0			# move to $t7 pointer in memory of matrix A
+			move $t0 $a1			# move to $t0 pointer in memory of matrix B
+	com_loop:	bgt $t4 $t5 com_success		# if current_address > final_address jump to com_success
+							#	the > is a result of final_address being the address of the second index
+							#	and the second index must also be taken into account
+			add $t4 $t4 $t7			# Address in memory of matrix A
+			lw $a0 ($t4)			# Load value of matrix A	
+			sub $t4 $t4 $t7			# Back to current_adress	
+			add $t4 $t4 $t0			# Address in memory of matrix B
+			lw $a1 ($t4)			# Load value of matrix B	
+			sub $t4 $t4 $t0			# Back to current_adress
+			addi $t4 $t4 4			# increment current_address by 4
+			sub $sp $sp 4			# Move stack pointer to store one value
+			sw $ra ($sp)			# Store the $ra into the stack
+			jal cmp				# Jump to compare
+			lw $ra ($sp)			# Return the $ra value
+			addi $sp $sp 4			# move the stack to the last relevant element
+			add $t6 $t6 $v0			# add result of cmp to the result
+			b com_loop			# jump to com_loop
+	com_success:	li $v0 0			# success, load 0 to result register $v0
+			add $v1 $zero $t6			# copy sum to $v1
+			b com_exit			# jump to exit
+	com_error:	li $v0 -1			# error, load -1 to result register $v0
+	com_exit:	jr $ra				# return to $ra				
+					
 			
 		
 		
