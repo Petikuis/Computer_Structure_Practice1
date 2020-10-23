@@ -88,8 +88,8 @@
 			sll $t4 $t4 2			# previous * 4
 			# to obtain the address from (k,l) the following formula is used: (n*l + k)*4 + address
 			mul $t5 $a3 $t3 		# n*l
-			add $t5 $t6 $t2			# previous + k
-			sll $t5 $t6 2			# previous * 4
+			add $t5 $t5 $t2			# previous + k
+			sll $t5 $t5 2			# previous * 4
 			move $t6 $zero			# $t5 is sum
 			move $t7 $a0			# move to $t7 pointer in memory of matrix A
 			move $t0 $a1			# move to $t0 pointer in memory of matrix B
