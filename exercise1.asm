@@ -7,7 +7,7 @@
 			mul $t1 $a1 $a2			# n*m
 			sll $t1 $t1 2			# previous * 4
 			add $t1 $t1 $a0			# $t1 is final_address
-			li $t2 1			# $t2 is the value to be stored in each cell
+			li $t2 0			# $t2 is the value to be stored in each cell
 	init_loop:	bge $t0 $t1 init_success	# if current_address >= final_adress jump to init_success
 							# 	the >= is a result of final_address being the address of the last index + 1
 							#	and the last address that needs to be written is that of the last index
@@ -35,7 +35,7 @@
 			bltz $a3 sum_error		# if i < 0 jump to sum_error
 			bge $t1 $a2 sum_error		# if k >= n jump to sum_error
 			bltz $t1 sum_error		# if k < 0 jump to sum_error
-			blt $t0 $t2 sum_no_errors	# if j < l jumt to sum_no_errors
+			blt $t0 $t2 sum_no_errors	# if j < l jump to sum_no_errors
 			bgt $t0 $t2 sum_error		# if j > l jump to sum_error
 			bgt $a3 $t1 sum_error		# having reached this branch we know j == l, if i > k jump to sum_error
 	sum_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*j + i)*4 + address

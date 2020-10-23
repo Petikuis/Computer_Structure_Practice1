@@ -1,0 +1,61 @@
+int init(address, m, n):
+	if m <= 0 or n <= 0: return -1
+	final_address = 4*m*n + address
+	while address < final_address:
+		store 0 in address
+		address += 4
+	return 0
+
+
+int add(address, m, n, i, j, k ,l):
+	if m <= 0 or n <= 0: return -1
+	if i or j or k or l < 0: return -1
+	if j or l >= m: return -1
+	if i or k >= n: return -1
+	if j > l: return -1
+	if j == l and i > k: return -1
+	current_address = (n*j + i)*4 + address
+	final_address = (n*l + k)*4 + address
+	sum = 0
+	while current_address <= final_address:
+		value = get at current_address
+		sum += value
+		current_address += 4
+	return 0, sum
+
+
+int compare(addressA, addressB, m, n, i, j, k ,l):
+	if m <= 0 or n <= 0: return -1
+	if i or j or k or l < 0: return -1
+	if j or l >= m: return -1
+	if i or k >= n: return -1
+	if j > l: return -1
+	if j == l and i > k: return -1
+	current_generic_address = (n*j + i)*4
+	final_generic_address = (n*l + k)*4
+	total = 0
+	while current_generic_address <= final_generic_address:
+		valueA = get at current_generic_address + addressA
+		valueB = get at current_generic_address + addressB
+		total += cmp(valueA, valueB)
+		current_generic_address += 4
+	return 0, total
+
+int extract(address, m, n, vector, p, i, j, k ,l):
+	if m <= 0 or n <= 0 or p <= 0: return -1
+	if i or j or k or l < 0: return -1
+	if j or l >= m: return -1
+	if i or k >= n: return -1
+	if j > l: return -1
+	if j == l and i > k: return -1
+	current_address = n*j + i
+	final_address = n*l + k
+	if p != final_address - current_address + 1: return -1
+	current_addres = current_address*4 + address
+	final_addres = final_address*4 + address
+	while current_address <= final_address:
+		extracted = get at current_address
+		store extracted in vector
+		current_address += 4
+		vector += 4
+	return 0
