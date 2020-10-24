@@ -322,15 +322,75 @@
 					sw $v0 ($sp)
 					# restore the address
 					move $a0 $t0
-					# jump to sum
+					# jump to extract
 					jal extract
 					lw $ra ($sp)
 					addi $sp $sp 4
 					# print result
 					b main_single_result
 					
-	main_extract_float:		nop
-					b main_return
+	main_extract_float:		# save current $ra
+					sub $sp $sp 4
+					sw $ra ($sp)
+					# print address
+					la $a0 address
+					li $v0 4
+					syscall
+					# get address
+					li $v0 5
+					syscall
+					move $t0 $v0
+					# print address
+					la $a0 address
+					li $v0 4
+					syscall
+					# get address
+					li $v0 5
+					syscall
+					move $a2 $v0
+					# print address
+					la $a0 address
+					li $v0 4
+					syscall
+					# get address
+					li $v0 5
+					syscall
+					move $a1 $v0
+					sub $sp $sp 12
+					# print address
+					la $a0 address
+					li $v0 4
+					syscall
+					# get address
+					li $v0 5
+					syscall
+					move $a3 $v0
+					# setup stack
+					sub $sp $sp 8
+					# print width
+					la $a0 width
+					li $v0 4
+					syscall
+					# get width
+					li $v0 5
+					syscall
+					sw $v0 ($sp)
+					# print height
+					la $a0 height
+					li $v0 4
+					syscall
+					# get height
+					li $v0 5
+					syscall
+					sw $v0 4($sp)
+					# restore the address
+					move $a0 $t0
+					# jump to extractValues
+					jal extractValues
+					lw $ra ($sp)
+					addi $sp $sp 4
+					# print result
+					b main_single_result
 	
 	main_single_result:		# print result
 					move $a0 $v0

@@ -59,3 +59,26 @@ int extract(address, m, n, vector, p, i, j, k ,l):
 		current_address += 4
 		vector += 4
 	return 0
+
+int extractValues(addressA, addressS, addressE, addressMa, m, n):
+    if m <= 0 or n <= 0: return -1
+    current_address = 0
+    final_address = m*n*4
+    while current_address <= final_address:
+        extracted = get at current_address + addressA
+        sign = extracted
+        sign >> 31
+        store sign in current_address + addressS
+        exponent = extracted
+        exponent >> 23
+        remove sign from exponent
+        store exponent in current_address + addressE
+        mantissa = extracted
+        mantissa << 9
+        mantissa >> 9
+        if exponent == 0 or 255:
+            store mantissa in current_address + addressMa
+        else:
+            store mantissa + 0x00800000 in current_address + addressMa
+        current_address + 4
+    return 0
