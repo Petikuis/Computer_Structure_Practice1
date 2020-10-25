@@ -1,3 +1,4 @@
+.text
 .globl init
 	init:						# $a0 address, $a1 m, $a2 n
 			blez $a1 init_error		# if m <= 0 jump to init_error
@@ -103,11 +104,21 @@
 			lw $a1 ($t4)			# Load value of matrix B	
 			sub $t4 $t4 $t0			# Back to current_adress
 			addi $t4 $t4 4			# increment current_address by 4
-			sub $sp $sp 4			# Move stack pointer to store one value
+			sub $sp $sp 24			# Move stack pointer to store six values
+			sw $t4 20($sp)			# Store current_address into the stack
+			sw $t5 16($sp)			# Store final address into the stack
+			sw $t7 12($sp)			# Store matrix A pointer into the stack
+			sw $t0 8($sp)			# Store matrix B pointer into the stack
+			sw $t6 4($sp)			# Store total number of equals into the stack
 			sw $ra ($sp)			# Store the $ra into the stack
 			jal cmp				# Jump to compare
-			lw $ra ($sp)			# Return the $ra value
-			addi $sp $sp 4			# move the stack to the last relevant element
+			lw $t4 20($sp)			# Load current_address from the stack
+			lw $t5 16($sp)			# Load final address from the stack
+			lw $t7 12($sp)			# Load matrix A pointer from the stack
+			lw $t0 8($sp)			# Load matrix B pointer from the stack
+			lw $t6 4($sp)			# Load total number of equals from the stack
+			lw $ra ($sp)			# Load $ra from the stack
+			addi $sp $sp 24			# move the stack to the last relevant element
 			add $t6 $t6 $v0			# add result of cmp to the result
 			b com_loop			# jump to com_loop
 	com_success:	li $v0 0			# success, load 0 to result register $v0

@@ -1,3 +1,4 @@
+.text
 .globl extractValues
 	extractValues:					# $a0 addressA, $a1 addressS, $a2 addressE, $a3 addressMa, ($t0) $sp + 4 m, ($t1) $sp n
 			lw $t0 4($sp)			# get m from the stack

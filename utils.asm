@@ -1,3 +1,4 @@
+.text
 .globl set
 	# set allows for setting an in the matrix to an specific value
 	set:						# $a0 address, $a1 m, $a2 n, $a3 i, ($t0) $sp + 4 j, ($t1) $sp value
