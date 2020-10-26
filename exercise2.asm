@@ -1,8 +1,8 @@
 .text
 .globl extractValues
 	extractValues:					# $a0 addressA, $a1 addressS, $a2 addressE, $a3 addressMa, ($t0) $sp + 4 m, ($t1) $sp n
-			lw $t0 4($sp)			# get m from the stack
 			lw $t1($sp)			# get n from the stack
+			lw $t0 4($sp)			# get m from the stack
 			blez $t0 extV_error		# if m <= 0 go to extV_error
 			blez $t1 extV_error		# if n <= 0 go to extV_error
 			mul $t3 $t0 $t1			# m*n

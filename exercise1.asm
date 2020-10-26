@@ -22,9 +22,9 @@
 	
 .globl sum
 	sum:						# $a0 address, $a1 m, $a2 n, $a3 i, ($t0) $sp + 8 j, ($t1) $sp + 4 k, ($t2) $sp l
-			lw $t0 8($sp)			# get j from the stack
-			lw $t1 4($sp)			# get k from the stack
 			lw $t2 ($sp)			# get l from the stack
+			lw $t1 4($sp)			# get k from the stack
+			lw $t0 8($sp)			# get j from the stack
 			addi $sp $sp 12			# move the stack to the last relevant element
 			blez $a1 sum_error		# if m <= 0 jump to sum_error
 			blez $a2 sum_error		# if n <= 0 jump to sum_error
@@ -65,10 +65,10 @@
 			
 .globl compare
 	compare:					# $a0 address matrix A, $a1 adress matrix B, $a2 m, $a3 n, ($t0) $sp + 12 i, ($t1) $sp + 8 j, ($t2) $sp + 4 k, ($t3) $sp l
-			lw $t0 12($sp)			# get i from the stack
-			lw $t1 8($sp)			# get j from the stack
-			lw $t2 4($sp)			# get k from the stack
 			lw $t3 ($sp)			# get l from the stack
+			lw $t2 4($sp)			# get k from the stack
+			lw $t1 8($sp)			# get j from the stack
+			lw $t0 12($sp)			# get i from the stack
 			addi $sp $sp 16			# move the stack to the last relevant element
 			blez $a2 com_error		# if m <= 0 jump to com_error
 			blez $a3 com_error		# if n <= 0 jump to com_error
@@ -112,12 +112,12 @@
 			sw $t6 4($sp)			# Store total number of equals into the stack
 			sw $ra ($sp)			# Store the $ra into the stack
 			jal cmp				# Jump to compare
-			lw $t4 20($sp)			# Load current_address from the stack
-			lw $t5 16($sp)			# Load final address from the stack
-			lw $t7 12($sp)			# Load matrix A pointer from the stack
-			lw $t0 8($sp)			# Load matrix B pointer from the stack
-			lw $t6 4($sp)			# Load total number of equals from the stack
 			lw $ra ($sp)			# Load $ra from the stack
+			lw $t6 4($sp)			# Load total number of equals from the stack
+			lw $t0 8($sp)			# Load matrix B pointer from the stack
+			lw $t7 12($sp)			# Load matrix A pointer from the stack
+			lw $t5 16($sp)			# Load final address from the stack
+			lw $t4 20($sp)			# Load current_address from the stack
 			addi $sp $sp 24			# move the stack to the last relevant element
 			add $t6 $t6 $v0			# add result of cmp to the result
 			b com_loop			# jump to com_loop
@@ -130,11 +130,11 @@
 
 .globl extract
 	extract:					# $a0 address of the matrix, $a1 m, $a2 n, $a3 address of the vector, ($t0) $sp + 16 p, ($t1) $sp + 12 i, ($t2) $sp + 8 j, ($t3) $sp + 4 k, ($t4) $sp l
-			lw $t0 16($sp)			# get p from the stack
-			lw $t1 12($sp)			# get i from the stack
-			lw $t2 8($sp)			# get j from the stack
-			lw $t3 4($sp)			# get k from the stack
 			lw $t4 ($sp)			# get l from the stack
+			lw $t3 4($sp)			# get k from the stack
+			lw $t2 8($sp)			# get j from the stack
+			lw $t1 12($sp)			# get i from the stack
+			lw $t0 16($sp)			# get p from the stack
 			addi $sp $sp 20			# move the stack to the last relevant element
 			blez $a1 ext_error		# if m <= 0 jump to ext_error
 			blez $a2 ext_error		# if n <= 0 jump to ext_error
