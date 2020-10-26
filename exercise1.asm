@@ -28,25 +28,25 @@
 			addi $sp $sp 12			# move the stack to the last relevant element
 			blez $a1 sum_error		# if m <= 0 jump to sum_error
 			blez $a2 sum_error		# if n <= 0 jump to sum_error
-			bge $t0 $a1 sum_error		# if j >= m jump to sum_error
-			bltz $t0 sum_error		# if j < 0 jump to sum_error
-			bge $t2 $a1 sum_error		# if l >= m jump to sum_error
-			bltz $t2 sum_error		# if l < 0 jump to sum_error
-			bge $a3 $a2 sum_error		# if i >= n jump to sum_error
+			bge $a3 $a1 sum_error		# if i >= m jump to sum_error
 			bltz $a3 sum_error		# if i < 0 jump to sum_error
-			bge $t1 $a2 sum_error		# if k >= n jump to sum_error
+			bge $t1 $a1 sum_error		# if k >= m jump to sum_error
 			bltz $t1 sum_error		# if k < 0 jump to sum_error
-			blt $t0 $t2 sum_no_errors	# if j < l jump to sum_no_errors
-			bgt $t0 $t2 sum_error		# if j > l jump to sum_error
-			bgt $a3 $t1 sum_error		# having reached this branch we know j == l, if i > k jump to sum_error
-	sum_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*j + i)*4 + address
-			mul $t3 $a2 $t0 		# n*j
-			add $t3 $t3 $a3			# previous + i
+			bge $t0 $a2 sum_error		# if j >= n jump to sum_error
+			bltz $t0 sum_error		# if j < 0 jump to sum_error
+			bge $t2 $a2 sum_error		# if l >= n jump to sum_error
+			bltz $t2 sum_error		# if l < 0 jump to sum_error
+			blt $a3 $t1 sum_no_errors	# if i < k jump to sum_no_errors
+			bgt $a3 $t1 sum_error		# if i > k jump to sum_error
+			bgt $t0 $t2 sum_error		# having reached this branch we know i == k, if j > l jump to sum_error
+	sum_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*i + j)*4 + address
+			mul $t3 $a2 $a3 		# n*i
+			add $t3 $t3 $t0			# previous + j
 			sll $t3 $t3 2			# previous * 4
 			add $t3 $t3 $a0			# $t3 is current_address
-			# to obtain the address from (k,l) the following formula is used: (n*l + k)*4 + address
-			mul $t4 $a2 $t2 		# n*l
-			add $t4 $t4 $t1			# previous + k
+			# to obtain the address from (k,l) the following formula is used: (n*k + i)*4 + address
+			mul $t4 $a2 $t1 		# n*k
+			add $t4 $t4 $t2			# previous + l
 			sll $t4 $t4 2			# previous * 4
 			add $t4 $t4 $a0			# $t4 is final_address
 			move $t5 $zero			# $t5 is sum
@@ -72,24 +72,24 @@
 			addi $sp $sp 16			# move the stack to the last relevant element
 			blez $a2 com_error		# if m <= 0 jump to com_error
 			blez $a3 com_error		# if n <= 0 jump to com_error
-			bge $t1 $a2 com_error		# if j >= m jump to com_error
-			bltz $t1 com_error		# if j < 0 jump to com_error
-			bge $t3 $a2 com_error		# if l >= m jump to com_error
-			bltz $t3 com_error		# if l < 0 jump to com_error
-			bge $t0 $a3 com_error		# if i >= n jump to com_error
+			bge $t0 $a2 com_error		# if i >= m jump to com_error
 			bltz $t0 com_error		# if i < 0 jump to com_error
-			bge $t2 $a3 com_error		# if k >= n jump to com_error
+			bge $t2 $a2 com_error		# if k >= m jump to com_error
 			bltz $t2 com_error		# if k < 0 jump to com_error
-			blt $t1 $t3 com_no_errors	# if j < l jump to com_no_errors
-			bgt $t1 $t3 com_error		# if j > l jump to com_error
-			bgt $t0 $t2 com_error		# having reached this branch we know j == l, if i > k jump to com_error		
-	com_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*j + i)*4 + address
-			mul $t4 $a3 $t1 		# n*j
-			add $t4 $t4 $t0			# previous + i
+			bge $t1 $a3 com_error		# if j >= n jump to com_error
+			bltz $t1 com_error		# if j < 0 jump to com_error
+			bge $t3 $a3 com_error		# if l >= n jump to com_error
+			bltz $t3 com_error		# if l < 0 jump to com_error
+			blt $t0 $t2 com_no_errors	# if i < k jump to com_no_errors
+			bgt $t0 $t2 com_error		# if i > k jump to com_error
+			bgt $t1 $t3 com_error		# having reached this branch we know i == k, if j > l jump to com_error		
+	com_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*i + j)*4 + address
+			mul $t4 $a3 $t0 		# n*i
+			add $t4 $t4 $t1			# previous + j
 			sll $t4 $t4 2			# previous * 4
-			# to obtain the address from (k,l) the following formula is used: (n*l + k)*4 + address
-			mul $t5 $a3 $t3 		# n*l
-			add $t5 $t5 $t2			# previous + k
+			# to obtain the address from (k,l) the following formula is used: (n*k + l)*4 + address
+			mul $t5 $a3 $t2 		# n*k
+			add $t5 $t5 $t3			# previous + l
 			sll $t5 $t5 2			# previous * 4
 			move $t6 $zero			# $t5 is sum
 			move $t7 $a0			# move to $t7 pointer in memory of matrix A
@@ -139,24 +139,24 @@
 			blez $a1 ext_error		# if m <= 0 jump to ext_error
 			blez $a2 ext_error		# if n <= 0 jump to ext_error
 			blez $t0 ext_error		# if p <= 0 jump to ext_error
-			bge $t2 $a1 ext_error		# if j >= m jump to ext_error
-			bltz $t2 ext_error		# if j < 0 jump to ext_error
-			bge $t4 $a1 ext_error		# if l >= m jump to ext_error
-			bltz $t4 ext_error		# if l < 0 jump to ext_error
-			bge $t1 $a2 ext_error		# if i >= n jump to ext_error
+			bge $t1 $a1 ext_error		# if i >= m jump to ext_error
 			bltz $t1 ext_error		# if i < 0 jump to ext_error
-			bge $t3 $a2 ext_error		# if k >= n jump to ext_error
+			bge $t3 $a1 ext_error		# if k >= m jump to ext_error
 			bltz $t3 ext_error		# if k < 0 jump to ext_error
-			blt $t2 $t4 ext_check_p		# if j < l jump to ext_check_p
-			bgt $t2 $t4 ext_error		# if j > l jump to ext_error
-			bgt $t1 $t3 ext_error		# having reached this branch we know j == l, if i > k jump to error
+			bge $t2 $a2 ext_error		# if j >= n jump to ext_error
+			bltz $t2 ext_error		# if j < 0 jump to ext_error
+			bge $t4 $a2 ext_error		# if l >= n jump to ext_error
+			bltz $t4 ext_error		# if l < 0 jump to ext_error
+			blt $t1 $t3 ext_check_p		# if i < k jump to ext_check_p
+			bgt $t1 $t3 ext_error		# if i > k jump to ext_error
+			bgt $t2 $t4 ext_error		# having reached this branch we know i == k, if j > l jump to error
 	ext_check_p:	# to validate the size of the vector we will substract the points's indexes
-			# to obtain the index from (i,j) the following formula is used: n*j + i
-			mul $t5 $a2 $t2 		# n*j
-			add $t5 $t5 $t1			# previous + i, $t5 is index_start
-			# to obtain the address from (k,l) the following formula is used: n*l + k
-			mul $t6 $a2 $t4 		# n*l
-			add $t6 $t6 $t3			# previous + k, $t6 is index_end
+			# to obtain the index from (i,j) the following formula is used: n*i + j
+			mul $t5 $a2 $t1 		# n*i
+			add $t5 $t5 $t2			# previous + j, $t5 is index_start
+			# to obtain the address from (k,l) the following formula is used: n*k + l
+			mul $t6 $a2 $t3 		# n*k
+			add $t6 $t6 $t4			# previous + l, $t6 is index_end
 			sub $t7 $t6 $t5			# substraction of the indexes
 			addi $t7 $t7 1			# add 1 to convert from index to amount of indexes, $t7 is index_amount
 			bne $t0 $t7 ext_error		# p != index_amount jump to ext_error
