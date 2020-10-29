@@ -20,26 +20,26 @@
 	init_error:	li $v0 -1			# failure, load -1 to result register $v0
 	init_end:	jr $ra				# return to $ra
 	
-.globl sum
-	sum:						# $a0 address, $a1 m, $a2 n, $a3 i, ($t0) $sp + 8 j, ($t1) $sp + 4 k, ($t2) $sp l
+.globl add
+	add:						# $a0 address, $a1 m, $a2 n, $a3 i, ($t0) $sp + 8 j, ($t1) $sp + 4 k, ($t2) $sp l
 			lw $t2 ($sp)			# get l from the stack
 			lw $t1 4($sp)			# get k from the stack
 			lw $t0 8($sp)			# get j from the stack
 			addi $sp $sp 12			# move the stack to the last relevant element
-			blez $a1 sum_error		# if m <= 0 jump to sum_error
-			blez $a2 sum_error		# if n <= 0 jump to sum_error
-			bge $a3 $a1 sum_error		# if i >= m jump to sum_error
-			bltz $a3 sum_error		# if i < 0 jump to sum_error
-			bge $t1 $a1 sum_error		# if k >= m jump to sum_error
-			bltz $t1 sum_error		# if k < 0 jump to sum_error
-			bge $t0 $a2 sum_error		# if j >= n jump to sum_error
-			bltz $t0 sum_error		# if j < 0 jump to sum_error
-			bge $t2 $a2 sum_error		# if l >= n jump to sum_error
-			bltz $t2 sum_error		# if l < 0 jump to sum_error
-			blt $a3 $t1 sum_no_errors	# if i < k jump to sum_no_errors
-			bgt $a3 $t1 sum_error		# if i > k jump to sum_error
-			bgt $t0 $t2 sum_error		# having reached this branch we know i == k, if j > l jump to sum_error
-	sum_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*i + j)*4 + address
+			blez $a1 add_error		# if m <= 0 jump to add_error
+			blez $a2 add_error		# if n <= 0 jump to add_error
+			bge $a3 $a1 add_error		# if i >= m jump to add_error
+			bltz $a3 add_error		# if i < 0 jump to add_error
+			bge $t1 $a1 add_error		# if k >= m jump to add_error
+			bltz $t1 add_error		# if k < 0 jump to add_error
+			bge $t0 $a2 add_error		# if j >= n jump to add_error
+			bltz $t0 add_error		# if j < 0 jump to add_error
+			bge $t2 $a2 add_error		# if l >= n jump to add_error
+			bltz $t2 add_error		# if l < 0 jump to add_error
+			blt $a3 $t1 add_no_errors	# if i < k jump to add_no_errors
+			bgt $a3 $t1 add_error		# if i > k jump to add_error
+			bgt $t0 $t2 add_error		# having reached this branch we know i == k, if j > l jump to sum_error
+	add_no_errors:	# to obtain the address from (i,j) the following formula is used: (n*i + j)*4 + address
 			mul $t3 $a2 $a3 		# n*i
 			add $t3 $t3 $t0			# previous + j
 			sll $t3 $t3 2			# previous * 4
@@ -50,18 +50,18 @@
 			sll $t4 $t4 2			# previous * 4
 			add $t4 $t4 $a0			# $t4 is final_address
 			move $t5 $zero			# $t5 is sum
-	sum_loop:	bgt $t3 $t4 sum_success		# if current_address > final_address jump to add_success
+	add_loop:	bgt $t3 $t4 add_success		# if current_address > final_address jump to add_success
 							#	the > is a result of final_address being the address of the second index
 							#	and the second index must also be taken into account
 			lw $t6 ($t3)			# load word at current_address to $t6
 			add $t5 $t5 $t6			# increment sum by $t6
 			addi $t3 $t3 4			# increment current_address by 4
-			b sum_loop			# jump to add_loop
-	sum_success:	li $v0 0			# success, load 0 to result register $v0
+			b add_loop			# jump to add_loop
+	add_success:	li $v0 0			# success, load 0 to result register $v0
 			move $v1 $t5			# copy sum to $v1
 			b sum_end			# jump to end
-	sum_error:	li $v0 -1			# failure, load -1 to result register $v0
-	sum_end:	jr $ra				# return to $ra			
+	add_error:	li $v0 -1			# failure, load -1 to result register $v0
+	add_end:	jr $ra				# return to $ra			
 			
 .globl compare
 	compare:					# $a0 address matrix A, $a1 adress matrix B, $a2 m, $a3 n, ($t0) $sp + 12 i, ($t1) $sp + 8 j, ($t2) $sp + 4 k, ($t3) $sp l
